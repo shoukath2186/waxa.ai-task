@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Nexus Fraud Analyzer</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="dashboard">
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>Nexus</h1>
+            </div>
+            <p class="subtitle">Fraud Analytics Engine</p>
+            
+            <nav class="nav-menu">
+                <a href="/" class="nav-btn active" style="text-decoration: none;">Dashboard</a>
+                <a href="/fraud-rings" class="nav-btn" style="text-decoration: none;">Fraud Rings</a>
+                <a href="/shared-devices" class="nav-btn" style="text-decoration: none;">Shared Devices</a>
+            </nav>
+
+            <div class="stats-card">
+                <h3>Database Status</h3>
+                <div class="stat">
+                    <span class="label">Nodes</span>
+                    <span class="value" id="node-count">...</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Relationships</span>
+                    <span class="value" id="rel-count">...</span>
+                </div>
+                <div class="status-indicator online">
+                    <span class="dot"></span> Connected to CognoDB
+                </div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header>
+                <h2>Graph Database Analysis</h2>
+                <div class="user-profile">Analyst Mode</div>
+            </header>
+
+            <div class="view-section active">
+                <div class="section-header">
+                    <h2>Dashboard Analytics</h2>
+                    <p>Overview of the fraud network graph database.</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="data-card" style="text-align: center;">
+                        <h3 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 400;">Total Transaction Volume</h3>
+                        <div id="analytics-volume" style="font-size: 2.5rem; font-weight: 700; color: var(--text-primary);">...</div>
+                        <div id="analytics-tx-count" style="color: var(--success); font-size: 0.9rem; margin-top: 8px;">...</div>
+                    </div>
+                    
+                    <div class="data-card" style="text-align: center; border-color: rgba(239, 68, 68, 0.3);">
+                        <h3 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 400;">Suspicious Devices</h3>
+                        <div id="analytics-devices" style="font-size: 2.5rem; font-weight: 700; color: var(--danger);">...</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px;">Devices accessed by multiple users</div>
+                    </div>
+
+                    <div class="data-card">
+                        <h3 style="color: var(--text-secondary); margin-bottom: 16px; font-weight: 400; text-align: center;">Highest Outbound Volume (Risk)</h3>
+                        <div id="analytics-top-accounts" style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="loading-state" style="padding: 1rem;">Loading accounts...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="welcome-card" style="margin-top: 2rem;">
+                    <h2>Nexus Fraud Analyzer</h2>
+                    <p>This application utilizes a Graph Database (CognoDB) to uncover complex fraud networks that are difficult to detect using traditional relational databases.</p>
+                    <div style="display: flex; gap: 16px; justify-content: center; margin-top: 1rem;">
+                        <a href="/fraud-rings" class="primary-btn" style="text-decoration: none; display: inline-block;">Analyze Fraud Rings</a>
+                        <a href="/shared-devices" class="primary-btn" style="text-decoration: none; display: inline-block; background: transparent; border: 1px solid var(--border);">View Shared Devices</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
