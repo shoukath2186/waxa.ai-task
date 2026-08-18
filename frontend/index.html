@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 </head>
 <body data-page="dashboard">
     <div class="app-container">
@@ -73,12 +74,20 @@
                     </div>
                 </div>
                 
-                <div class="welcome-card" style="margin-top: 2rem;">
+                <div class="section-header" style="margin-top: 3rem; margin-bottom: 1rem;">
+                    <h2>Interactive Fraud Network</h2>
+                    <p>Visual representation of all accounts, devices, and transactions.</p>
+                </div>
+                <div id="graph-container" style="display: flex; align-items: center; justify-content: center;">
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">Loading graph visualization...</p>
+                </div>
+                
+                <div class="welcome-card" style="margin-top: 3rem;">
                     <h2>Nexus Fraud Analyzer</h2>
                     <p>This application utilizes a Graph Database (CognoDB) to uncover complex fraud networks that are difficult to detect using traditional relational databases.</p>
                     <div style="display: flex; gap: 16px; justify-content: center; margin-top: 1rem;">
                         <a href="/fraud-rings" class="primary-btn" style="text-decoration: none; display: inline-block;">Analyze Fraud Rings</a>
-                        <a href="/shared-devices" class="primary-btn" style="text-decoration: none; display: inline-block; background: transparent; border: 1px solid var(--border);">View Shared Devices</a>
+                        <a href="/shared-devices" class="primary-btn secondary-btn" style="text-decoration: none; display: inline-block;">View Shared Devices</a>
                     </div>
                 </div>
             </div>

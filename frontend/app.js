@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (page === 'dashboard') {
         fetchDetailedAnalytics();
+        renderGraph();
     } else if (page === 'fraud-rings') {
         fetchFraudRings();
     } else if (page === 'shared-devices') {
@@ -42,7 +43,8 @@ async function fetchDetailedAnalytics() {
             el.style.justifyContent = 'space-between';
             el.style.alignItems = 'center';
             el.style.padding = '12px';
-            el.style.background = 'rgba(0, 0, 0, 0.2)';
+            el.style.background = '#f8fafc';
+            el.style.border = '1px solid #e2e8f0';
             el.style.borderRadius = '8px';
             el.style.borderLeft = '3px solid var(--danger)';
             
@@ -62,6 +64,109 @@ async function fetchDetailedAnalytics() {
     } catch (error) {
         console.error('Error fetching detailed analytics:', error);
         document.getElementById('analytics-top-accounts').innerHTML = '<div style="color: var(--danger); padding: 1rem;">Failed to load analytics data. Ensure backend is running.</div>';
+    }
+}
+
+async function renderGraph() {
+    const container = document.getElementById('graph-container');
+    if (!container) return;
+
+    try {
+        const response = await fetch('/api/graph');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+
+        // Vis.js requires a completely empty container to mount its canvas
+        container.innerHTML = '';
+        container.style.display = 'block';
+
+        const nodes = new vis.DataSet(data.nodes.map(n => {
+            let label = n.labels[0] || 'Unknown';
+            let title = '';
+            let color = { background: '#cbd5e1', border: '#94a3b8' };
+
+            if (n.labels.includes('Person')) {
+                label = n.properties.name || 'Person';
+                color = { background: '#93c5fd', border: '#2563eb', highlight: { background: '#60a5fa', border: '#1d4ed8' } };
+                title = `👤 Person: ${n.properties.name}`;
+            } else if (n.labels.includes('BankAccount')) {
+                label = n.properties.id || 'Account';
+                color = { background: '#86efac', border: '#059669', highlight: { background: '#4ade80', border: '#047857' } };
+                title = `🏦 Account ID: ${n.properties.id}`;
+            } else if (n.labels.includes('Device')) {
+                label = n.properties.id || 'Device';
+                color = { background: '#fca5a5', border: '#dc2626', highlight: { background: '#f87171', border: '#b91c1c' } };
+                title = `📱 Device ID: ${n.properties.id}`;
+            }
+
+            return {
+                id: n.id,
+                label: label,
+                title: title,
+                color: color,
+                shape: 'dot',
+                size: 18,
+                font: { size: 13, face: 'Outfit', color: '#1e293b', bold: { color: '#0f172a' } },
+                borderWidth: 2,
+                shadow: { enabled: true, color: 'rgba(0,0,0,0.08)', size: 6 }
+            };
+        }));
+
+        const edges = new vis.DataSet(data.edges.map(e => {
+            let label = e.type.replace(/_/g, ' ');
+            let color = '#94a3b8';
+            let width = 2;
+            if (e.type === 'TRANSFERS_TO') {
+                label = `$${e.properties.amount || 0}`;
+                color = '#f59e0b';
+                width = 3;
+            } else if (e.type === 'OWNS') {
+                color = '#2563eb';
+                width = 1.5;
+            } else if (e.type === 'USES') {
+                color = '#dc2626';
+                width = 1.5;
+            }
+            return {
+                id: e.id,
+                from: e.source,
+                to: e.target,
+                label: label,
+                color: { color: color, highlight: '#1d4ed8', hover: '#3b82f6' },
+                arrows: { to: { enabled: true, scaleFactor: 0.8 } },
+                font: { size: 11, align: 'middle', color: '#475569', strokeWidth: 3, strokeColor: '#ffffff' },
+                width: width,
+                smooth: { type: 'curvedCW', roundness: 0.15 }
+            };
+        }));
+
+        const options = {
+            physics: {
+                enabled: true,
+                stabilization: { iterations: 150 },
+                barnesHut: {
+                    gravitationalConstant: -3500,
+                    springConstant: 0.04,
+                    springLength: 120,
+                    damping: 0.15
+                }
+            },
+            interaction: {
+                hover: true,
+                tooltipDelay: 150,
+                zoomView: true,
+                dragNodes: true,
+                navigationButtons: true
+            },
+            layout: {
+                improvedLayout: true
+            }
+        };
+
+        new vis.Network(container, { nodes, edges }, options);
+    } catch (error) {
+        console.error('Error fetching graph data:', error);
+        container.innerHTML = '<div class="empty-state" style="color: var(--danger)">Failed to load interactive graph. Check backend connection.</div>';
     }
 }
 
